@@ -7,19 +7,19 @@ const STUDENTS = {
     "Aksh Raturi","Akshaj Chakrapani","Angel Mary Asish","Angira Roy",
     "Anushree Srenivasan","Avi Mishra","Ayaan Anugrah Lall","Chetan Devireddy",
     "Dhruv Naga Aditya Tiruveedula","Diya Aju","Georgy Oommen George","Ishaan Sibin",
-    "Kanav Gupta","Kanisshka B","Krisha Riteshkumar Panchal","Lakshya Kankar",
-    "Lakshya Malik","Lipika Panda","Mohammad Aahil Khan","Neel Joshi",
-    "Neelakantan Kaplingat","Rajveer Saxena","Rakshitha","Rishabh Mallya H",
-    "Ronak Rasindh","Saksham Ranjan","Saniddhya Das","Shashwat Chandra",
-    "Shrey Dusad","Sreehari Ravi Prasad","T.R.Easwar","Veda Srishti Dinnepu"
+    "Kanav Gupta","Kanisshka B","Krisha Riteshkumar Panchal","Lakshya Malik",
+    "Lipika Panda","Mohammad Aahil Khan","Neel Joshi","Neelakantan Kaplingat",
+    "Rajveer Saxena","Rishabh Mallya H","Ronak Rasindh","Saksham Ranjan",
+    "Saniddhya Das","Shashwat Chandra","Shrey Dusad","Sreehari Ravi Prasad",
+    "T.R.Easwar","Veda Srishti Dinnepu"
   ],
   'XI-Adv B': [
     "Aadhya Ganesh","Aakriti","Aditya Anand","Ahana Ghosh Roy",
     "Akshay Sathish","Angela Bino","Ankith Nambiar","Ashish Kumar Barik",
     "Athul Mathew","Dhruv Sai Paapisetty","Gagan M.N","Jitesh Karthik",
-    "Kabir Yadav","Lalitha Samanvita Matte","Manmay Panda","Naissha Saini",
-    "Parameswaran Kaplingat","Piraisoodan","Preya Mankad","Priyasha Rath",
-    "Rishita Baruah","Rishitha Reddy Duddukunta","Rithika Reddy Enaganti",
+    "Kabir Yadav","Lakshya Kankar","Lalitha Samanvita Matte","Manmay Panda",
+    "Naissha Saini","Parameswaran Kaplingat","Piraisoodan","Preya Mankad",
+    "Priyasha Rath","Rishita Baruah","Rishitha Reddy Duddukunta","Rithika Reddy Enaganti",
     "Sharada Koona Srinivasan","Shourya Ghosh","Shubh Choudhary","Tanushkaa M"
   ],
   'XI-Mains': [
