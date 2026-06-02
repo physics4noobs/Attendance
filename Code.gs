@@ -39,7 +39,7 @@ const STUDENTS = {
     "Prarthana N","Siya Sachin Kulkarni","Tadapaneni Khyathi Vaishnavi","Vaibhav Singh",
     "Veda Goberu","Venisha Manjunath"
   ],
-  'Grade X':  ["D Manya","Dheer P","Harvy Patel","Mainak Pal"],
+  'Grade X':  ["D Manya","Dheer P","Harvy Patel","Mainak Pal","Pranay Kumar"],
   'Grade IX': [
     "Abhilasha Patranabis","Anna Maria Stephen","Ayaan Chaturvedi","Bathuri Saadhvi",
     "Chandana Naga Durga Tiruveedula","Harshit Dey","Javvadi Gopi Saranya",
@@ -214,10 +214,13 @@ function doPost(e) {
       sheet.getRange(2, dateCol).setBackground('#D6E4F0');
     }
 
-    // Match students by name (column A, starting row 4)
-    const students  = STUDENTS[batch];
-    const nameMap   = {};
-    students.forEach((name, i) => nameMap[name.trim()] = i + DATA_START_ROW);
+    // Read names directly from column A of the sheet — order-independent
+    const lastRow = sheet.getLastRow();
+    const nameCol = sheet.getRange(DATA_START_ROW, 1, lastRow - DATA_START_ROW + 1, 1).getValues().flat();
+    const nameMap = {};
+    nameCol.forEach((name, i) => {
+      if (name && name.trim()) nameMap[name.trim()] = i + DATA_START_ROW;
+    });
 
     attendance.forEach(({ name, status }) => {
       const rowNum = nameMap[name.trim()];
