@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>DPS Attendance</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #1F4E79;
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .header h1 { font-size: 18px; font-weight: 700; }
+    .header .subtitle { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .back-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px 8px 4px 0;
+      display: none;
+    }
+
+    /* ── Date Banner ── */
+    .date-banner {
+      margin: 16px 16px 4px;
+      background: linear-gradient(135deg, #1F4E79, #2980b9);
+      border-radius: 14px;
+      padding: 16px 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(31,78,121,0.3);
+    }
+    .date-banner .day-big {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .date-banner .month-year {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-top: 3px;
+      font-weight: 500;
+    }
+    .date-banner .weekday {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .date-banner .progress-info {
+      text-align: right;
+    }
+    .date-banner .progress-info .done-count {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .date-banner .progress-info .done-label {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 3px;
+    }
+
+    /* ── Batch Selection Screen ── */
+    #batch-screen {
+      padding: 0 0 24px;
+    }
+    .screen-title {
+      font-size: 13px;
+      color: #888;
+      margin: 14px 16px 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .batch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 0 16px;
+    }
+    .batch-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px 16px 16px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      transition: all 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .batch-card:active { transform: scale(0.96); }
+    .batch-card .icon { font-size: 30px; margin-bottom: 8px; }
+    .batch-card .name { font-size: 14px; font-weight: 700; color: #1F4E79; }
+    .batch-card .count { font-size: 11px; color: #aaa; margin-top: 3px; }
+
+    .batch-card.adv-a  { border-color: #4CAF50; }
+    .batch-card.adv-b  { border-color: #2196F3; }
+    .batch-card.mains  { border-color: #FF9800; }
+    .batch-card.neet   { border-color: #E91E63; }
+    .batch-card.grade-x  { border-color: #9C27B0; }
+    .batch-card.grade-ix { border-color: #00BCD4; }
+
+    /* Done tick badge */
+    .tick-badge {
+      position: absolute;
+      top: -8px; right: -8px;
+      width: 26px; height: 26px;
+      background: #2e7d32;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      border: 2px solid white;
+    }
+    .batch-card.done .tick-badge { display: flex; }
+    .batch-card.done { opacity: 0.75; }
+    .batch-card.done .count { color: #2e7d32; font-weight: 600; }
+
+    /* ── Attendance Screen ── */
+    #attendance-screen { display: none; }
+
+    .date-bar {
+      background: #e8f0fe;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: #1F4E79;
+      font-weight: 600;
+      border-bottom: 1px solid #d0dff5;
+    }
+
+    .summary-bar {
+      display: flex;
+      gap: 12px;
+      padding: 10px 20px;
+      background: white;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+    }
+    .summary-bar .pill {
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .pill.present { background: #e8f5e9; color: #2e7d32; }
+    .pill.absent  { background: #fdecea; color: #c62828; }
+
+    .student-list {
+      padding: 8px 0 100px;
+    }
+    .student-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.15s;
+    }
+    .student-item.absent-row { background: #fff5f5; }
+
+    .student-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #222;
+      flex: 1;
+      padding-right: 12px;
+    }
+    .student-number {
+      font-size: 12px;
+      color: #aaa;
+      margin-right: 8px;
+      min-width: 24px;
+    }
+
+    /* Toggle Switch */
+    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
+    .toggle-label { font-size: 12px; font-weight: 700; min-width: 28px; text-align: center; }
+    .toggle-label.p { color: #2e7d32; }
+    .toggle-label.a { color: #c62828; }
+
+    .toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #4CAF50;
+      border-radius: 28px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .slider:before {
+      content: '';
+      position: absolute;
+      width: 22px; height: 22px;
+      left: 3px; top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.25s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    input:checked + .slider { background: #F44336; }
+    input:checked + .slider:before { transform: translateX(24px); }
+
+    /* Submit Button */
+    .submit-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      padding: 14px 20px;
+      background: white;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.1);
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: #1F4E79;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+    }
+    .submit-btn:active { background: #163a5c; }
+    .submit-btn:disabled { background: #aaa; cursor: not-allowed; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 90px; left: 50%; transform: translateX(-50%);
+      background: #323232;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+    .toast.success { background: #2e7d32; }
+    .toast.error   { background: #c62828; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <button class="back-btn" id="backBtn" onclick="goBack()">←</button>
+  <div>
+    <div class="h1" id="headerTitle" style="font-size:18px;font-weight:700;">DPS Attendance</div>
+    <div class="subtitle" id="headerSub">Select a batch to begin</div>
+  </div>
+</div>
+
+<!-- Batch Selection -->
+<div id="batch-screen">
+
+  <!-- Date Banner -->
+  <div class="date-banner">
+    <div>
+      <div class="day-big" id="bannerDay"></div>
+      <div class="month-year" id="bannerMonthYear"></div>
+      <div class="weekday" id="bannerWeekday"></div>
+    </div>
+    <div class="progress-info">
+      <div class="done-count"><span id="doneCount">0</span>/6</div>
+      <div class="done-label">Batches done</div>
+    </div>
+  </div>
+
+  <div class="screen-title">Select batch</div>
+
+  <div class="batch-grid">
+    <div class="batch-card adv-a"  id="card-XI-Adv A"  onclick="openBatch('XI-Adv A')">
+      <div class="tick-badge">✓</div>
+      <div class="icon">🔬</div>
+      <div class="name">XI – Adv A</div>
+      <div class="count" id="status-XI-Adv A">36 students</div>
+    </div>
+    <div class="batch-card adv-b"  id="card-XI-Adv B"  onclick="openBatch('XI-Adv B')">
+      <div class="tick-badge">✓</div>
+      <div class="icon">🧪</div>
+      <div class="name">XI – Adv B</div>
+      <div class="count" id="status-XI-Adv B">27 students</div>
+    </div>
+    <div class="batch-card mains"  id="card-XI-Mains"  onclick="openBatch('XI-Mains')">
+      <div class="tick-badge">✓</div>
+      <div class="icon">📐</div>
+      <div class="name">XI – Mains</div>
+      <div class="count" id="status-XI-Mains">25 students</div>
+    </div>
+    <div class="batch-card neet"   id="card-XI-NEET"   onclick="openBatch('XI-NEET')">
+      <div class="tick-badge">✓</div>
+      <div class="icon">🩺</div>
+      <div class="name">XI – NEET</div>
+      <div class="count" id="status-XI-NEET">26 students</div>
+    </div>
+    <div class="batch-card grade-x"  id="card-Grade X"  onclick="openBatch('Grade X')">
+      <div class="tick-badge">✓</div>
+      <div class="icon">📚</div>
+      <div class="name">Grade X</div>
+      <div class="count" id="status-Grade X">4 students</div>
+    </div>
+    <div class="batch-card grade-ix" id="card-Grade IX" onclick="openBatch('Grade IX')">
+      <div class="tick-badge">✓</div>
+      <div class="icon">✏️</div>
+      <div class="name">Grade IX</div>
+      <div class="count" id="status-Grade IX">14 students</div>
+    </div>
+  </div>
+</div>
+
+<!-- Attendance Screen -->
+<div id="attendance-screen">
+  <div class="date-bar" id="dateBar"></div>
+  <div class="summary-bar">
+    <span class="pill present">✓ Present: <span id="presentCount">0</span></span>
+    <span class="pill absent">✗ Absent: <span id="absentCount">0</span></span>
+  </div>
+  <div class="student-list" id="studentList"></div>
+  <div class="submit-bar">
+    <button class="submit-btn" id="submitBtn" onclick="submitAttendance()">Submit Attendance</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── IMPORTANT: Paste your deployed Apps Script URL here ──────────────────
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxnF5JmMEb_fx9turFYNiRJNgN2mptZnR6bhRMQxriR5n9E8za5xbsdXK6ppxfVsXai/exec';
+
+  const STUDENTS = {
+    'XI-Adv A': [
+      "Rishabh Mallya H","Shrey Dusad","Lipika Panda","Krisha Riteshkumar Panchal",
+      "Diya Aju","Saniddhya Das","Kanav Gupta","Angel Mary Asish",
+      "Ayaan Anugrah Lall","Georgy Oommen George","Ronak Rasindh","Adhrit Das",
+      "T.R.Easwar","Ishaan Sibin","Lakshya Malik","Aarya Sachin Kulkarni",
+      "Veda Srishti Dinnepu","Kanisshka B","Neel Joshi","Anushree Srenivasan",
+      "Saksham Ranjan","Aksh Raturi","Lakshya Kankar","Sreehari Ravi Prasad",
+      "Dhruv Naga Aditya Tiruveedula","Neelakantan Kaplingat","Aditya Pandey",
+      "Akshaj Chakrapani","Avi Mishra","Chetan Devireddy","Adityaram Arunaachalam",
+      "Rajveer Saxena","Angira Roy","Mohammad Aahil Khan","Shashwat Chandra","Rakshitha"
+    ],
+    'XI-Adv B': [
+      "Aadhya Ganesh","Aakriti","Rithika Reddy Enaganti","Preya Mankad",
+      "Gagan M.N","Piraisoodan","Aditya Anand","Shourya Ghosh",
+      "Athul Mathew","Ahana Ghosh Roy","Priyasha Rath","Parameswaran Kaplingat",
+      "Kabir Yadav","Angela Bino","Lalitha Samanvita Matte","Rishita Baruah",
+      "Naissha Saini","Sharada Koona Srinivasan","Jitesh Karthik","Tanushkaa M",
+      "Manmay Panda","Ankith Nambiar","Ashish Kumar Barik","Akshay Sathish",
+      "Rishitha Reddy Duddukunta","Dhruv Sai Paapisetty","Shubh Choudhary"
+    ],
+    'XI-Mains': [
+      "Arshiya Karmakar","Ahan Agarwal","Yash Gupta","Louie Mathew",
+      "Ajay Madesh","Jishnusri Spoorthy Manjuluri","Aarav Dasgupta","Praneeth Venkat",
+      "Mayank Praful Lahorkar","Samvit Gupta","Krishna Dash","S V Niharikha",
+      "Ritwik Guha","Narendran Jayakumar","Gauransh Kar","Chirantani Ash",
+      "Keshav Syamkumar","Ayanna Samal","Anwesha Pai","Shragvi Parauha",
+      "Advitha Rohit","Shalini T A","Jason Chacko George","Zoya Taj","Ishita Sharma"
+    ],
+    'XI-NEET': [
+      "Advika Jha","Medhashree Mohan","Harvi Prashant Kumar Kasodariya",
+      "Nikhila Shreyasi Adkasthala","Adit Raj","Aaryan Darsi","Anushka Parasher",
+      "Joshua George Mathew","Siya Sachin Kulkarni","Venisha Manjunath",
+      "Krinal Krish K","Geena Krish","Anirjit Chandra","Vaibhav Singh",
+      "Anirwin Asokane","Arshi Khongal","Arjun Nambiar","P Prarthna",
+      "Anahita Mathur","K S Vishnupriya","Arnav Chaudhary","Veda Goberu",
+      "Prarthana N","Tadapaneni Khyathi Vaishnavi","Akaisha Lilani","Bani Samir Mewada"
+    ],
+    'Grade X':  ["Harvy Patel","Mainak Pal","Dheer P","D Manya"],
+    'Grade IX': [
+      "Abhilasha Patranabis","Korlapati Sri Samarth","Javvadi Gopi Saranya",
+      "Chandana Naga Durga Tiruveedula","Shrish Reddy","Niveditha M",
+      "Thrinesh Bharadwaj","Bathuri Saadhvi","Ayaan Chaturvedi",
+      "Shubhangi Hazarika","Vippagunta Arnav","Harshit Dey",
+      "Tharunika V G","Anna Maria Stephen"
+    ]
+  };
+
+  let currentBatch = null;
+
+  function getTodayString() {
+    const d = new Date();
+    const day   = String(d.getDate()).padStart(2, '0');
+    const month = d.toLocaleString('en-GB', { month: 'short' });
+    const year  = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+  // ── localStorage key is date-specific so ticks reset each new day ──────────
+  function getDoneKey() { return `dps_done_${getTodayString()}`; }
+
+  function getDoneBatches() {
+    return JSON.parse(localStorage.getItem(getDoneKey()) || '[]');
+  }
+
+  function markBatchDone(batch) {
+    const done = getDoneBatches();
+    if (!done.includes(batch)) done.push(batch);
+    localStorage.setItem(getDoneKey(), JSON.stringify(done));
+    refreshDoneUI();
+  }
+
+  function refreshDoneUI() {
+    const done = getDoneBatches();
+    document.getElementById('doneCount').textContent = done.length;
+    Object.keys(STUDENTS).forEach(batch => {
+      const card   = document.getElementById(`card-${batch}`);
+      const status = document.getElementById(`status-${batch}`);
+      if (!card) return;
+      if (done.includes(batch)) {
+        card.classList.add('done');
+        status.textContent = '✓ Done';
+      } else {
+        card.classList.remove('done');
+      }
+    });
+  }
+
+  function initDateBanner() {
+    const d = new Date();
+    const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    document.getElementById('bannerDay').textContent      = d.getDate();
+    document.getElementById('bannerMonthYear').textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+    document.getElementById('bannerWeekday').textContent  = days[d.getDay()];
+  }
+
+  // Run on load
+  initDateBanner();
+  refreshDoneUI();
+
+  function openBatch(batch) {
+    currentBatch = batch;
+    const students = STUDENTS[batch];
+
+    document.getElementById('headerTitle').textContent = batch;
+    document.getElementById('headerSub').textContent = getTodayString();
+    document.getElementById('backBtn').style.display = 'block';
+    document.getElementById('dateBar').textContent = '📅  ' + getTodayString();
+    document.getElementById('batch-screen').style.display = 'none';
+    document.getElementById('attendance-screen').style.display = 'block';
+
+    const list = document.getElementById('studentList');
+    list.innerHTML = '';
+
+    students.forEach((name, i) => {
+      const item = document.createElement('div');
+      item.className = 'student-item';
+      item.id = `row-${i}`;
+      item.innerHTML = `
+        <span class="student-number">${i + 1}</span>
+        <span class="student-name">${name}</span>
+        <div class="toggle-wrap">
+          <span class="toggle-label p" id="lbl-${i}">P</span>
+          <label class="toggle">
+            <input type="checkbox" id="chk-${i}" onchange="onToggle(${i})" />
+            <span class="slider"></span>
+          </label>
+        </div>`;
+      list.appendChild(item);
+    });
+
+    updateSummary();
+  }
+
+  function onToggle(i) {
+    const isAbsent = document.getElementById(`chk-${i}`).checked;
+    const lbl = document.getElementById(`lbl-${i}`);
+    const row = document.getElementById(`row-${i}`);
+    lbl.textContent = isAbsent ? 'A' : 'P';
+    lbl.className = isAbsent ? 'toggle-label a' : 'toggle-label p';
+    row.className  = isAbsent ? 'student-item absent-row' : 'student-item';
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const students = STUDENTS[currentBatch];
+    let absent = 0;
+    students.forEach((_, i) => {
+      if (document.getElementById(`chk-${i}`) && document.getElementById(`chk-${i}`).checked) absent++;
+    });
+    document.getElementById('presentCount').textContent = students.length - absent;
+    document.getElementById('absentCount').textContent  = absent;
+  }
+
+  function goBack() {
+    currentBatch = null;
+    document.getElementById('headerTitle').textContent = 'DPS Attendance';
+    document.getElementById('headerSub').textContent   = 'Select a batch to begin';
+    document.getElementById('backBtn').style.display   = 'none';
+    document.getElementById('batch-screen').style.display = 'block';
+    document.getElementById('attendance-screen').style.display = 'none';
+  }
+
+  async function submitAttendance() {
+    const students = STUDENTS[currentBatch];
+    const attendance = students.map((name, i) => ({
+      name,
+      status: document.getElementById(`chk-${i}`).checked ? 'A' : 'P'
+    }));
+
+    const payload = {
+      batch:      currentBatch,
+      date:       getTodayString(),
+      attendance
+    };
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body:    JSON.stringify(payload)
+      });
+      const json = await res.json();
+
+      if (json.success) {
+        markBatchDone(currentBatch);
+        showToast('✓ Attendance submitted!', 'success');
+        setTimeout(() => goBack(), 1800);
+      } else {
+        throw new Error(json.error || 'Unknown error');
+      }
+    } catch (err) {
+      showToast('✗ Failed: ' + err.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Submit Attendance';
+    }
+  }
+
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = `toast ${type} show`;
+    setTimeout(() => t.className = 'toast', 3000);
+  }
+</script>
+</body>
+</html>
