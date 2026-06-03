@@ -553,8 +553,26 @@
     document.getElementById('bannerWeekday').textContent   = days[d.getDay()];
   }
 
+  // ── Sync tick marks with Sheet on every load ─────────────────────────────
+  // Asks the Apps Script which batches already have today's column in the Sheet.
+  // All phones see the same ticks regardless of who submitted.
+  async function syncWithSheet() {
+    try {
+      const res  = await fetch(`${SCRIPT_URL}?date=${getTodayString()}`, { redirect: 'follow' });
+      const json = await res.json();
+      if (Array.isArray(json.submitted) && json.submitted.length > 0) {
+        const merged = [...new Set([...getDoneBatches(), ...json.submitted])];
+        localStorage.setItem(getDoneKey(), JSON.stringify(merged));
+        refreshDoneUI();
+      }
+    } catch (_) {
+      // Network error — silently fall back to localStorage
+    }
+  }
+
   initDateBanner();
-  refreshDoneUI();
+  refreshDoneUI();  // immediate from localStorage
+  syncWithSheet();  // background sync with Sheet
 
   function openBatch(batch) {
     currentBatch = batch;

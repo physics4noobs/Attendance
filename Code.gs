@@ -245,8 +245,36 @@ function doPost(e) {
   }
 }
 
-function doGet() {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'DPS Attendance API running' }))
-    .setMimeType(ContentService.MimeType.JSON);
+function doGet(e) {
+  const date = e && e.parameter && e.parameter.date;
+
+  if (!date) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'DPS Attendance API running' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  try {
+    const ss        = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const submitted = [];
+
+    Object.keys(STUDENTS).forEach(batchName => {
+      const sheet = ss.getSheetByName(batchName);
+      if (!sheet) return;
+      const lastCol   = Math.max(sheet.getLastColumn(), 1);
+      const headerRow = sheet.getRange(HEADER_ROW, 1, 1, lastCol).getValues()[0];
+      if (headerRow.map(h => String(h).trim()).includes(date)) {
+        submitted.push(batchName);
+      }
+    });
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ submitted }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ submitted: [], error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
