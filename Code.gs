@@ -19,7 +19,7 @@ const STUDENTS = {
     "Athul Mathew","Dhruv Sai Paapisetty","Gagan M.N","Jitesh Karthik",
     "Kabir Yadav","Lakshya Kankar","Lalitha Samanvita Matte","Manmay Panda",
     "Naissha Saini","Parameswaran Kaplingat","Piraisoodan","Preya Mankad",
-    "Priyasha Rath","Rishita Baruah","Rishitha Reddy Duddukunta","Rithika Reddy Enaganti",
+    "Priyasha Rath","Rakshitha","Rishita Baruah","Rishitha Reddy Duddukunta","Rithika Reddy Enaganti",
     "Sharada Koona Srinivasan","Shourya Ghosh","Shubh Choudhary","Tanushkaa M"
   ],
   'XI-Mains': [
