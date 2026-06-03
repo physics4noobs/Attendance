@@ -40,8 +40,8 @@
       letter-spacing: -0.5px;
     }
     .header-text { flex: 1; }
-    .header-title { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
-    .header-sub   { font-size: 11px; opacity: 0.55; margin-top: 1px; font-weight: 500; }
+    .header-title { font-size: 17px; font-weight: 800; letter-spacing: -0.4px; }
+    .header-sub   { font-size: 12px; opacity: 0.5; margin-top: 2px; font-weight: 500; letter-spacing: 0.1px; }
     .back-btn {
       background: rgba(255,255,255,0.12);
       border: none; color: white;
@@ -90,9 +90,9 @@
       border-radius: 50%;
     }
     .banner-left { position: relative; z-index: 1; }
-    .banner-day  { font-size: 48px; font-weight: 900; line-height: 1; letter-spacing: -2px; }
-    .banner-month { font-size: 15px; font-weight: 600; opacity: 0.8; margin-top: 2px; }
-    .banner-weekday { font-size: 11px; font-weight: 600; opacity: 0.5; margin-top: 2px; text-transform: uppercase; letter-spacing: 1.5px; }
+    .banner-day  { font-size: 56px; font-weight: 900; line-height: 1; letter-spacing: -3px; }
+    .banner-month { font-size: 16px; font-weight: 600; opacity: 0.85; margin-top: 4px; letter-spacing: -0.2px; }
+    .banner-weekday { font-size: 11px; font-weight: 700; opacity: 0.45; margin-top: 4px; text-transform: uppercase; letter-spacing: 2px; }
     .banner-right { text-align: right; position: relative; z-index: 1; }
     .banner-progress {
       font-size: 42px; font-weight: 900; line-height: 1; letter-spacing: -2px;
@@ -119,26 +119,26 @@
       font-size: 11px; font-weight: 700;
       color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin: 20px 20px 12px;
+      letter-spacing: 1.5px;
+      margin: 24px 20px 14px;
     }
 
     /* Batch Grid */
     .batch-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
       padding: 0 16px;
     }
     .batch-card {
-      border-radius: 18px;
-      padding: 20px 16px 18px;
+      border-radius: 22px;
+      padding: 24px 18px 20px;
       text-align: center;
       cursor: pointer;
       position: relative;
       overflow: hidden;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.18);
     }
     .batch-card:active { transform: scale(0.95); }
     .batch-card::before {
@@ -158,20 +158,22 @@
     .batch-card.grade-ix { background: linear-gradient(145deg, #4a148c, #8e24aa); }
 
     .batch-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
+      font-size: 36px;
+      margin-bottom: 12px;
       display: block;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
     }
     .batch-name {
-      font-size: 15px; font-weight: 800;
+      font-size: 16px; font-weight: 800;
       color: white;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.4px;
+      line-height: 1.2;
     }
     .batch-count {
-      font-size: 11px; font-weight: 500;
-      color: rgba(255,255,255,0.65);
-      margin-top: 4px;
+      font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      margin-top: 6px;
+      letter-spacing: 0.1px;
     }
 
     /* Tick badge */
@@ -199,35 +201,35 @@
     /* Summary strip */
     .summary-strip {
       display: flex;
-      gap: 10px;
-      padding: 12px 16px;
+      gap: 12px;
+      padding: 14px 16px;
       background: white;
       border-bottom: 1px solid #e8eef8;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     }
     .summary-pill {
       flex: 1;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 10px 12px;
-      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 12px;
+      border-radius: 16px;
       font-size: 13px; font-weight: 700;
     }
     .summary-pill.present { background: #F0FDF4; color: #15803d; }
     .summary-pill.absent  { background: #FEF2F2; color: #dc2626; }
-    .summary-pill .pill-count { font-size: 20px; font-weight: 900; }
-    .summary-pill .pill-label { font-size: 11px; opacity: 0.75; }
+    .summary-pill .pill-count { font-size: 26px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
+    .summary-pill .pill-label { font-size: 12px; font-weight: 600; opacity: 0.7; letter-spacing: 0.2px; }
 
     /* Student list */
-    .student-list { padding: 12px 16px 110px; display: flex; flex-direction: column; gap: 8px; }
+    .student-list { padding: 16px 16px 120px; display: flex; flex-direction: column; gap: 10px; }
 
     .student-item {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       background: white;
-      border-radius: 14px;
-      padding: 12px 14px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       transition: all 0.2s ease;
       border: 1.5px solid transparent;
     }
@@ -238,28 +240,29 @@
 
     /* Avatar */
     .avatar {
-      width: 38px; height: 38px;
-      border-radius: 12px;
+      width: 44px; height: 44px;
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 800;
+      font-size: 15px; font-weight: 800;
       color: white;
       flex-shrink: 0;
       letter-spacing: -0.5px;
     }
 
     .student-info { flex: 1; min-width: 0; }
-    .student-number { font-size: 10px; font-weight: 600; color: #94a3b8; margin-bottom: 1px; }
+    .student-number { font-size: 10px; font-weight: 500; color: #cbd5e1; margin-bottom: 3px; letter-spacing: 0.5px; }
     .student-name {
-      font-size: 14px; font-weight: 600; color: #1e293b;
+      font-size: 15px; font-weight: 700; color: #0f172a;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      letter-spacing: -0.2px;
     }
     .student-item.absent-row .student-name { color: #991b1b; }
 
     /* Toggle */
-    .toggle-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .toggle-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .toggle-label {
-      font-size: 11px; font-weight: 800;
-      min-width: 20px; text-align: center;
+      font-size: 12px; font-weight: 900;
+      min-width: 22px; text-align: center;
       letter-spacing: 0.5px;
     }
     .toggle-label.p { color: #15803d; }
@@ -300,16 +303,16 @@
     }
     .submit-btn {
       width: 100%;
-      padding: 16px;
+      padding: 18px;
       background: linear-gradient(135deg, #0F2044, #1a4080);
       color: white;
       border: none;
-      border-radius: 16px;
-      font-size: 15px;
+      border-radius: 18px;
+      font-size: 16px;
       font-weight: 800;
       cursor: pointer;
-      letter-spacing: 0.3px;
-      box-shadow: 0 8px 24px rgba(15,32,68,0.35);
+      letter-spacing: 0.2px;
+      box-shadow: 0 8px 28px rgba(15,32,68,0.4);
       transition: all 0.2s ease;
       font-family: 'Inter', sans-serif;
     }
