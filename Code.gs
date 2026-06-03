@@ -41,9 +41,9 @@ const STUDENTS = {
   ],
   'Grade X':  ["D Manya","Dheer P","Harvy Patel","Mainak Pal","Pranay Kumar"],
   'Grade IX': [
-    "Abhilasha Patranabis","Anna Maria Stephen","Ayaan Chaturvedi","Bathuri Saadhvi",
+    "Abhilasha Patranabis","Advik","Anna Maria Stephen","Ayaan Chaturvedi","Bathuri Saadhvi",
     "Chandana Naga Durga Tiruveedula","Harshit Dey","Javvadi Gopi Saranya",
-    "Korlapati Sri Samarth","Niveditha M","Shrish Reddy","Shubhangi Hazarika",
+    "Korlapati Sri Samarth","Niveditha M","Rahul","Shrish Reddy","Shubhangi Hazarika",
     "Tharunika V G","Thrinesh Bharadwaj","Vippagunta Arnav"
   ]
 };
