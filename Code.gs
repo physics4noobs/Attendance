@@ -234,6 +234,15 @@ function doPost(e) {
       }
     });
 
+    // Record submission in Properties so all phones can sync instantly
+    const props   = PropertiesService.getScriptProperties();
+    const key     = `submitted_${dateStr}`;
+    const already = JSON.parse(props.getProperty(key) || '[]');
+    if (!already.includes(batch)) {
+      already.push(batch);
+      props.setProperty(key, JSON.stringify(already));
+    }
+
     return ContentService
       .createTextOutput(JSON.stringify({ success: true }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -254,27 +263,10 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  try {
-    const ss        = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const submitted = [];
+  const props     = PropertiesService.getScriptProperties();
+  const submitted = JSON.parse(props.getProperty(`submitted_${date}`) || '[]');
 
-    Object.keys(STUDENTS).forEach(batchName => {
-      const sheet = ss.getSheetByName(batchName);
-      if (!sheet) return;
-      const lastCol   = Math.max(sheet.getLastColumn(), 1);
-      const headerRow = sheet.getRange(HEADER_ROW, 1, 1, lastCol).getValues()[0];
-      if (headerRow.map(h => String(h).trim()).includes(date)) {
-        submitted.push(batchName);
-      }
-    });
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ submitted }))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ submitted: [], error: err.message }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+  return ContentService
+    .createTextOutput(JSON.stringify({ submitted }))
+    .setMimeType(ContentService.MimeType.JSON);
 }
