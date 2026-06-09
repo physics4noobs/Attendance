@@ -24,7 +24,7 @@ const STUDENTS = {
   ],
   'XI-Mains': [
     "Aarav Dasgupta","Advitha Rohit","Ahan Agarwal","Ajay Madesh",
-    "Anwesha Pai","Arshiya Karmakar","Ayanna Samal","Chirantani Ash",
+    "Anirjit Chandra","Anwesha Pai","Arshiya Karmakar","Ayanna Samal","Chirantani Ash",
     "Gauransh Kar","Ishita Sharma","Jason Chacko George","Jishnusri Spoorthy Manjuluri",
     "Keshav Syamkumar","Krishna Dash","Louie Mathew","Mayank Praful Lahorkar",
     "Narendran Jayakumar","Praneeth Venkat","Ritwik Guha","S V Niharikha",
@@ -32,7 +32,7 @@ const STUDENTS = {
   ],
   'XI-NEET': [
     "Aaryan Darsi","Adit Raj","Advika Jha","Akaisha Lilani",
-    "Anahita Mathur","Anirjit Chandra","Anirwin Asokane","Anushka Parasher",
+    "Anahita Mathur","Anirwin Asokane","Anushka Parasher",
     "Arjun Nambiar","Arnav Chaudhary","Arshi Khongal","Bani Samir Mewada",
     "Geena Krish","Harvi Prashant Kumar Kasodariya","Joshua George Mathew","K S Vishnupriya",
     "Krinal Krish K","Medhashree Mohan","Nikhila Shreyasi Adkasthala","P Prarthna",
