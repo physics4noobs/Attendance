@@ -39,7 +39,7 @@ const STUDENTS = {
     "Prarthana N","Siya Sachin Kulkarni","Tadapaneni Khyathi Vaishnavi","Vaibhav Singh",
     "Veda Goberu","Venisha Manjunath"
   ],
-  'Grade X':  ["D Manya","Dheer P","Harvy Patel","Mainak Pal","Pranay Kumar"],
+  'Grade X':  ["D Manya","Dheer P","Harvy Patel","Mainak Pal","Pranay Kumar","Tattv Kaul"],
   'Grade IX': [
     "Abhilasha Patranabis","Advik","Anna Maria Stephen","Ayaan Chaturvedi","Ayan Majumdar","Bathuri Saadhvi",
     "Chandana Naga Durga Tiruveedula","Harshit Dey","Javvadi Gopi Saranya",
