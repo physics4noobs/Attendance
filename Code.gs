@@ -59,6 +59,40 @@ const BATCH_COLORS = {
 };
 
 // ─── SETUP: Run once to build all sheets ─────────────────────────────────────
+// ─── RUN THIS ONCE to fix conditional formatting for all sheets ──────────────
+// Safe to run anytime — does NOT clear any attendance data
+function fixConditionalFormatting() {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const GREEN = '#1E8449';
+  const RED   = '#C0392B';
+  const WHITE = '#FFFFFF';
+
+  Object.keys(STUDENTS).forEach(batchName => {
+    const sheet = ss.getSheetByName(batchName);
+    if (!sheet) return;
+
+    sheet.clearConditionalFormatRules();
+
+    // Cover a large range so new students are always included
+    const cfRange = sheet.getRange('B4:ZZ500');
+
+    const presentRule = SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('P')
+      .setBackground(GREEN).setFontColor(WHITE)
+      .setRanges([cfRange]).build();
+
+    const absentRule = SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('A')
+      .setBackground(RED).setFontColor(WHITE)
+      .setRanges([cfRange]).build();
+
+    sheet.setConditionalFormatRules([presentRule, absentRule]);
+    Logger.log(`✅ Fixed: ${batchName}`);
+  });
+
+  Logger.log('All sheets fixed!');
+}
+
 function setupAttendanceSheet() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
 
