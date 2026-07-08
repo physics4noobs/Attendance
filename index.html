@@ -63,15 +63,11 @@
       border-radius: 50%;
     }
     .banner-left { position: relative; z-index: 1; }
-    .banner-day  { font-size: 38px; font-weight: 900; line-height: 1; letter-spacing: -2px; }
-    .banner-month { font-size: 16px; font-weight: 600; opacity: 0.85; margin-top: 4px; letter-spacing: -0.2px; }
-    .banner-weekday { font-size: 11px; font-weight: 700; opacity: 0.45; margin-top: 4px; text-transform: uppercase; letter-spacing: 2px; }
     .banner-right { text-align: right; position: relative; z-index: 1; }
-    .banner-progress {
-      font-size: 42px; font-weight: 900; line-height: 1; letter-spacing: -2px;
-    }
-    .banner-progress span { font-size: 20px; font-weight: 600; opacity: 0.6; }
-    .banner-prog-label { font-size: 11px; opacity: 0.55; margin-top: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+    .banner-progress { font-size: 20px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+    .banner-progress span:first-child { font-size: 20px; font-weight: 900; opacity: 1; }
+    .banner-progress span:last-child  { font-size: 14px; font-weight: 600; opacity: 0.75; }
+    .banner-prog-label { font-size: 10px; opacity: 0.55; margin-top: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
 
     /* Progress dots */
     .progress-dots {
@@ -373,13 +369,12 @@
   <!-- Date Banner -->
   <div class="date-banner">
     <div class="banner-left">
-      <div class="banner-day"     id="bannerDay"></div>
-      <div class="banner-month"   id="bannerMonthYear"></div>
-      <div class="banner-weekday" id="bannerWeekday"></div>
+      <div style="font-size:32px;font-weight:900;letter-spacing:-1px;line-height:1;">ATTENDANCE</div>
+      <div style="font-size:11px;font-weight:600;opacity:0.55;margin-top:4px;text-transform:uppercase;letter-spacing:2px;">AY 2026-27</div>
     </div>
     <div class="banner-right">
-      <div class="banner-progress"><span id="doneCount">0</span><span>/6</span></div>
-      <div class="banner-prog-label">Batches done</div>
+      <div class="banner-progress"><span id="bannerDay"></span><span id="bannerMonthYear"></span></div>
+      <div class="banner-prog-label" id="bannerWeekday"></div>
       <div class="progress-dots" id="progressDots">
         <div class="dot" id="dot-0"></div>
         <div class="dot" id="dot-1"></div>
@@ -579,7 +574,7 @@
     const months = ['January','February','March','April','May','June',
                     'July','August','September','October','November','December'];
     document.getElementById('bannerDay').textContent       = d.getDate();
-    document.getElementById('bannerMonthYear').textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+    document.getElementById('bannerMonthYear').textContent = ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
     document.getElementById('bannerWeekday').textContent   = days[d.getDay()];
   }
 
