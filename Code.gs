@@ -3,24 +3,25 @@ const SPREADSHEET_ID = '1WqKUyIF_DXoFtwtc1vU1hi_2ryXJ-mAt9DsHMPbP4Ug';
 
 const STUDENTS = {
   'XI-Adv A': [
-    "Aarya Sachin Kulkarni","Adhrit Das","Aditya Pandey","Adityaram Arunaachalam",
-    "Aksh Raturi","Akshaj Chakrapani","Angel Mary Asish","Angira Roy",
-    "Anushree Srenivasan","Avi Mishra","Ayaan Anugrah Lall","Chetan Devireddy",
-    "Dhruv Naga Aditya Tiruveedula","Diya Aju","Georgy Oommen George","Ishaan Sibin",
-    "Kanav Gupta","Kanisshka B","Krisha Riteshkumar Panchal","Lakshya Malik",
-    "Lipika Panda","Mohammad Aahil Khan","Neel Joshi","Neelakantan Kaplingat",
-    "Rajveer Saxena","Rishabh Mallya H","Ronak Rasindh","Saksham Ranjan",
-    "Saniddhya Das","Shashwat Chandra","Shrey Dusad","Sreehari Ravi Prasad",
-    "T.R.Easwar","Veda Srishti Dinnepu"
+    "Aarya Sachin Kulkarni","Adhrit Das","Aditya Pandey","Aksh Raturi",
+    "Akshaj Chakrapani","Angira Roy","Anushree Srenivasan","Athul Mathew",
+    "Ayaan Anugrah Lall","Dhruv Naga Aditya Tiruveedula","Diya Aju","Gagan M.N",
+    "Georgy Oommen George","Ishaan Sibin","Kanav Gupta","Kanisshka B",
+    "Krisha Riteshkumar Panchal","Lakshya Kankar","Lipika Panda","Manmay Panda",
+    "Neelakantan Kaplingat","Preya Mankad","Priyasha Rath","Rajveer Saxena",
+    "Rishabh Mallya H","Ronak Rasindh","Saksham Ranjan","Samvit Gupta",
+    "Saniddhya Das","Shrey Dusad","Sreehari Ravi Prasad","T.R.Easwar",
+    "Tanushkaa M","Veda Srishti Dinnepu"
   ],
   'XI-Adv B': [
-    "Aadhya Ganesh","Aakriti","Aditya Anand","Ahana Ghosh Roy",
-    "Akshay Sathish","Angela Bino","Ankith Nambiar","Ashish Kumar Barik",
-    "Athul Mathew","Dhruv Sai Paapisetty","Gagan M.N","Jitesh Karthik",
-    "Kabir Yadav","Lakshya Kankar","Lalitha Samanvita Matte","Manmay Panda",
-    "Naissha Saini","Parameswaran Kaplingat","Piraisoodan","Preya Mankad",
-    "Priyasha Rath","Rakshitha","Rishita Baruah","Rishitha Reddy Duddukunta","Rithika Reddy Enaganti",
-    "Sharada Koona Srinivasan","Shourya Ghosh","Shubh Choudhary","Tanushkaa M"
+    "Aadhya Ganesh","Aakriti","Aditya Anand","Adityaram Arunaachalam",
+    "Ahana Ghosh Roy","Akshay Sathish","Angel Mary Asish","Angela Bino",
+    "Ankith Nambiar","Ashish Kumar Barik","Avi Mishra","Chetan Devireddy",
+    "Dhruv Sai Paapisetty","Jitesh Karthik","Kabir Yadav","Lakshya Malik",
+    "Lalitha Samanvita Matte","Mohammad Aahil Khan","Naissha Saini","Neel Joshi",
+    "Parameswaran Kaplingat","Piraisoodan","Rakshitha","Rishita Baruah",
+    "Rishitha Reddy Duddukunta","Rithika Reddy Enaganti","Sharada Koona Srinivasan",
+    "Shashwat Chandra","Shourya Ghosh","Shubh Choudhary"
   ],
   'XI-Mains': [
     "Aarav Dasgupta","Advitha Rohit","Ahan Agarwal","Ajay Madesh",
@@ -28,7 +29,7 @@ const STUDENTS = {
     "Gauransh Kar","Ishita Sharma","Jason Chacko George","Jishnusri Spoorthy Manjuluri",
     "Keshav Syamkumar","Krishna Dash","Louie Mathew","Mayank Praful Lahorkar",
     "Narendran Jayakumar","Praneeth Venkat","Ritwik Guha","S V Niharikha",
-    "Samvit Gupta","Shalini T A","Shragvi Parauha","Yash Gupta","Zoya Taj"
+    "Shalini T A","Shragvi Parauha","Yash Gupta","Zoya Taj"
   ],
   'XI-NEET': [
     "Aaryan Darsi","Adit Raj","Advika Jha","Akaisha Lilani",
@@ -57,6 +58,103 @@ const BATCH_COLORS = {
   'Grade X':  '#006064',  // deep teal
   'Grade IX': '#4A148C',  // deep purple
 };
+
+// ─── ONE-TIME MIGRATION: XI-Adv A ↔ XI-Adv B reshuffle (Jul 2026 merit list) ──
+// Moves each student's full P/A history to their new batch tab, creating any
+// date column the destination is missing so no data is lost, then deletes
+// their row from the old tab. Run ONCE from the Apps Script editor
+// (select migrateStudents from the function dropdown → Run). Safe to inspect
+// the Sheet afterwards; a full backup copy was taken before this was written.
+const MOVES = [
+  { name: 'Angel Mary Asish',            from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Adityaram Arunaachalam',      from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Avi Mishra',                  from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Lakshya Malik',               from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Neel Joshi',                  from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Shashwat Chandra',            from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Chetan Devireddy',            from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Mohammad Aahil Khan',         from: 'XI-Adv A', to: 'XI-Adv B' },
+  { name: 'Lakshya Kankar',              from: 'XI-Adv B', to: 'XI-Adv A' },
+  { name: 'Athul Mathew',                from: 'XI-Adv B', to: 'XI-Adv A' },
+  { name: 'Gagan M.N',                   from: 'XI-Adv B', to: 'XI-Adv A' },
+  { name: 'Manmay Panda',                from: 'XI-Adv B', to: 'XI-Adv A' },
+  { name: 'Priyasha Rath',               from: 'XI-Adv B', to: 'XI-Adv A' },
+  { name: 'Preya Mankad',                from: 'XI-Adv B', to: 'XI-Adv A' },
+  { name: 'Tanushkaa M',                 from: 'XI-Adv B', to: 'XI-Adv A' },
+  { name: 'Samvit Gupta',                from: 'XI-Mains', to: 'XI-Adv A' }
+];
+
+function migrateStudents() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+
+  MOVES.forEach(function(move) {
+    const name = move.name, from = move.from, to = move.to;
+    const fromSheet = ss.getSheetByName(from);
+    const toSheet   = ss.getSheetByName(to);
+    if (!fromSheet || !toSheet) { Logger.log('SKIP ' + name + ': sheet missing (' + from + ' -> ' + to + ')'); return; }
+
+    const fromLastRow = fromSheet.getLastRow();
+    if (fromLastRow < DATA_START_ROW) { Logger.log('SKIP ' + name + ': ' + from + ' has no data rows'); return; }
+
+    const fromNames = fromSheet.getRange(DATA_START_ROW, 1, fromLastRow - DATA_START_ROW + 1, 1)
+      .getValues().flat().map(function(v) { return String(v).trim(); });
+    const fromIdx = fromNames.indexOf(name);
+    if (fromIdx === -1) { Logger.log('SKIP ' + name + ': not found in ' + from); return; }
+    const fromRow = fromIdx + DATA_START_ROW;
+
+    const fromLastCol = fromSheet.getLastColumn();
+    const fromDates  = fromLastCol >= 2 ? fromSheet.getRange(HEADER_ROW, 2, 1, fromLastCol - 1).getValues()[0].map(String) : [];
+    const fromValues = fromLastCol >= 2 ? fromSheet.getRange(fromRow, 2, 1, fromLastCol - 1).getValues()[0] : [];
+
+    // Find (or create) the student's row in the destination sheet
+    const toLastRowStart = toSheet.getLastRow();
+    const toNamesStart = toLastRowStart >= DATA_START_ROW
+      ? toSheet.getRange(DATA_START_ROW, 1, toLastRowStart - DATA_START_ROW + 1, 1).getValues().flat().map(function(v) { return String(v).trim(); })
+      : [];
+    let toRow = toNamesStart.indexOf(name);
+    if (toRow === -1) {
+      toRow = Math.max(toLastRowStart + 1, DATA_START_ROW);
+      const nameCell = toSheet.getRange(toRow, 1);
+      nameCell.setValue(name).setFontSize(10).setFontFamily('Google Sans')
+        .setVerticalAlignment('middle').setFontColor('#1A1A2E');
+    } else {
+      toRow = toRow + DATA_START_ROW;
+    }
+
+    // Copy every non-blank date value across, creating missing date columns
+    fromDates.forEach(function(date, i) {
+      const val = fromValues[i];
+      if (!val) return;
+
+      const toLastCol = toSheet.getLastColumn();
+      const toDates = toLastCol >= 2 ? toSheet.getRange(HEADER_ROW, 2, 1, toLastCol - 1).getValues()[0].map(String) : [];
+      let dateCol = toDates.indexOf(date);
+
+      if (dateCol === -1) {
+        dateCol = toLastCol + 1;
+        const hCell = toSheet.getRange(HEADER_ROW, dateCol);
+        hCell.setValue(date).setBackground('#1F4E79').setFontColor('#FFFFFF').setFontSize(9)
+          .setFontWeight('bold').setFontFamily('Google Sans')
+          .setHorizontalAlignment('center').setVerticalAlignment('middle');
+        toSheet.setColumnWidth(dateCol, 100);
+        toSheet.getRange(1, dateCol).setBackground(BATCH_COLORS[to] || '#1F4E79');
+        toSheet.getRange(2, dateCol).setBackground('#D6E4F0');
+      } else {
+        dateCol = dateCol + 2;
+      }
+
+      toSheet.getRange(toRow, dateCol).setValue(val)
+        .setHorizontalAlignment('center').setFontWeight('bold').setFontSize(10).setFontFamily('Google Sans');
+    });
+
+    // Remove the student's row from the old sheet now that history is copied
+    fromSheet.deleteRow(fromRow);
+
+    Logger.log('MOVED ' + name + ': ' + from + ' -> ' + to + ' (' + fromDates.length + ' date columns checked)');
+  });
+
+  Logger.log('Migration complete. Verify the Sheet, then re-run fixConditionalFormatting() if any P/A cells look unstyled.');
+}
 
 // ─── SETUP: Run once to build all sheets ─────────────────────────────────────
 // ─── RUN THIS ONCE to fix conditional formatting for all sheets ──────────────
@@ -289,7 +387,13 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  const date = e && e.parameter && e.parameter.date;
+  const params = (e && e.parameter) || {};
+
+  if (params.action === 'history' && params.batch) {
+    return getBatchHistory(params.batch);
+  }
+
+  const date = params.date;
 
   if (!date) {
     return ContentService
@@ -302,5 +406,44 @@ function doGet(e) {
 
   return ContentService
     .createTextOutput(JSON.stringify({ submitted }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Returns the full P/A grid for a batch: every date column ever submitted,
+// per student, read straight from the Sheet (so it's always in sync with
+// whatever's visible to management there).
+function getBatchHistory(batch) {
+  const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(batch);
+
+  if (!sheet) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: 'Sheet not found: ' + batch }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  const lastRow = sheet.getLastRow();
+  const lastCol = sheet.getLastColumn();
+
+  if (lastRow < DATA_START_ROW || lastCol < 2) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ batch: batch, dates: [], students: [] }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  const dates     = sheet.getRange(HEADER_ROW, 2, 1, lastCol - 1).getValues()[0].map(String);
+  const dataRange = sheet.getRange(DATA_START_ROW, 1, lastRow - DATA_START_ROW + 1, lastCol).getValues();
+
+  const students = dataRange
+    .filter(function(row) { return row[0] && String(row[0]).trim(); })
+    .map(function(row) {
+      return {
+        name:    String(row[0]).trim(),
+        records: row.slice(1).map(function(v) { return v ? String(v) : ''; })
+      };
+    });
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ batch: batch, dates: dates, students: students }))
     .setMimeType(ContentService.MimeType.JSON);
 }
