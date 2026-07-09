@@ -548,7 +548,6 @@
 
   function refreshDoneUI() {
     const done = getDoneBatches();
-    document.getElementById('doneCount').textContent = done.length;
 
     // Progress dots
     for (let i = 0; i < 6; i++) {
@@ -609,12 +608,13 @@
     for (const payload of list) {
       try {
         await sendAttendance(payload);
-        removePending(payload);
-        if (payload.date === getTodayString()) markBatchDone(payload.batch);
-        recovered++;
       } catch (_) {
         // still offline / still failing — leave it queued, try again later
+        continue;
       }
+      removePending(payload);
+      if (payload.date === getTodayString()) markBatchDone(payload.batch);
+      recovered++;
     }
     if (recovered > 0) showToast(`✓ Synced ${recovered} earlier submission${recovered > 1 ? 's' : ''}`, 'success');
   }
@@ -739,17 +739,22 @@
     try {
       await sendAttendance(payload);
       // no-cors returns an opaque response — data is sent, assume success
-      removePending(payload);
-      markBatchDone(currentBatch);
-      showToast('✓ Attendance submitted!', 'success');
-      setTimeout(() => goBack(), 1800);
     } catch (err) {
       queuePending(payload);
       console.error('Attendance submit failed:', err);
       showToast(`✗ ${err.message || 'Network error'} — saved, tap Retry`, 'error');
       btn.disabled = false;
       btn.textContent = 'Retry Submit';
+      return;
     }
+
+    // Send already succeeded at this point — keep local bookkeeping outside
+    // the network try/catch so a bug here can't get mislabeled as a failed
+    // submission and re-queue something that already went through.
+    removePending(payload);
+    markBatchDone(currentBatch);
+    showToast('✓ Attendance submitted!', 'success');
+    setTimeout(() => goBack(), 1800);
   }
 
   function showToast(msg, type) {
