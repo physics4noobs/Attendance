@@ -568,6 +568,59 @@
     });
   }
 
+  // ── Pending-submission queue ──────────────────────────────────────────────
+  // If a submit fails at the network layer, the payload is saved here instead
+  // of being lost. It's retried automatically on page load and when the
+  // browser regains connectivity, or manually via the "Retry Submit" button.
+  const PENDING_KEY = 'dps_pending_submissions';
+
+  function getPending() {
+    try { return JSON.parse(localStorage.getItem(PENDING_KEY) || '[]'); }
+    catch (_) { return []; }
+  }
+  function setPending(list) {
+    localStorage.setItem(PENDING_KEY, JSON.stringify(list));
+  }
+  function queuePending(payload) {
+    const list = getPending().filter(p => !(p.batch === payload.batch && p.date === payload.date));
+    list.push(payload);
+    setPending(list);
+  }
+  function removePending(payload) {
+    setPending(getPending().filter(p => !(p.batch === payload.batch && p.date === payload.date)));
+  }
+
+  async function sendAttendance(payload) {
+    await fetch(SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body:    JSON.stringify(payload)
+    });
+  }
+
+  // Retries anything left over from a previous failed submit. Runs quietly —
+  // only speaks up if it actually recovers something.
+  async function flushPendingSubmissions() {
+    const list = getPending();
+    if (!list.length) return;
+
+    let recovered = 0;
+    for (const payload of list) {
+      try {
+        await sendAttendance(payload);
+        removePending(payload);
+        if (payload.date === getTodayString()) markBatchDone(payload.batch);
+        recovered++;
+      } catch (_) {
+        // still offline / still failing — leave it queued, try again later
+      }
+    }
+    if (recovered > 0) showToast(`✓ Synced ${recovered} earlier submission${recovered > 1 ? 's' : ''}`, 'success');
+  }
+
+  window.addEventListener('online', flushPendingSubmissions);
+
   function initDateBanner() {
     const d = new Date();
     const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -598,6 +651,7 @@
   initDateBanner();
   refreshDoneUI();  // immediate from localStorage
   syncWithSheet();  // background sync with Sheet
+  flushPendingSubmissions();  // retry anything that failed to send last time
 
   function openBatch(batch) {
     currentBatch = batch;
@@ -683,20 +737,18 @@
     btn.textContent = 'Submitting…';
 
     try {
-      await fetch(SCRIPT_URL, {
-        method:  'POST',
-        mode:    'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body:    JSON.stringify(payload)
-      });
+      await sendAttendance(payload);
       // no-cors returns an opaque response — data is sent, assume success
+      removePending(payload);
       markBatchDone(currentBatch);
       showToast('✓ Attendance submitted!', 'success');
       setTimeout(() => goBack(), 1800);
     } catch (err) {
-      showToast('✗ Network error — check connection', 'error');
+      queuePending(payload);
+      console.error('Attendance submit failed:', err);
+      showToast(`✗ ${err.message || 'Network error'} — saved, tap Retry`, 'error');
       btn.disabled = false;
-      btn.textContent = 'Submit Attendance';
+      btn.textContent = 'Retry Submit';
     }
   }
 
