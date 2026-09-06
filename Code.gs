@@ -100,7 +100,9 @@ function writeDb(db) {
 // Run from the Apps Script editor any time to find the underlying data file
 // (e.g. to download a backup copy).
 function logStoreInfo() {
-  Logger.log('Attendance data file: ' + getAttendanceFile().getUrl());
+  const url = getAttendanceFile().getUrl();
+  Logger.log('Attendance data file: ' + url);
+  return url;
 }
 
 // Moves one student's full P/A history from one batch to another inside the
@@ -114,8 +116,9 @@ function moveStudentBatch(name, fromBatch, toBatch) {
   const to = db[toBatch] || (db[toBatch] = { dates: [], students: {} });
 
   if (!from || !from.students[name]) {
-    Logger.log('Not found: ' + name + ' in ' + fromBatch + ' (already moved, or never had a record)');
-    return;
+    const msg = 'Not found: ' + name + ' in ' + fromBatch + ' (already moved, or never had a record)';
+    Logger.log(msg);
+    return msg;
   }
 
   from.dates.forEach(function(date, i) {
@@ -139,12 +142,14 @@ function moveStudentBatch(name, fromBatch, toBatch) {
 
   delete from.students[name];
   writeDb(db);
-  Logger.log('Moved ' + name + ' from ' + fromBatch + ' to ' + toBatch);
+  const msg = 'Moved ' + name + ' from ' + fromBatch + ' to ' + toBatch;
+  Logger.log(msg);
+  return msg;
 }
 
 // One-off: run this once from the editor, then it's safe to leave in place.
 function moveAkshaySathishToMains() {
-  moveStudentBatch('Akshay Sathish', 'XI-Adv B', 'XI-Mains');
+  return moveStudentBatch('Akshay Sathish', 'XI-Adv B', 'XI-Mains');
 }
 
 function gasJson(obj) {
