@@ -18,7 +18,7 @@ const STUDENTS = {
   ],
   'XI-Adv B': [
     "Aadhya Ganesh","Aakriti","Adityaram Arunaachalam",
-    "Ahana Ghosh Roy","Akshay Sathish","Angel Mary Asish","Angela Bino",
+    "Ahana Ghosh Roy","Angel Mary Asish","Angela Bino",
     "Ankith Nambiar","Ashish Kumar Barik","Avi Mishra","Chetan Devireddy",
     "Dhruv Sai Paapisetty","Jitesh Karthik","Kabir Yadav","Lakshya Malik",
     "Lalitha Samanvita Matte","Mohammad Aahil Khan","Naissha Saini","Neel Joshi",
@@ -28,7 +28,7 @@ const STUDENTS = {
   ],
   'XI-Mains': [
     "Aarav Dasgupta","Advitha Rohit","Ahan Agarwal","Ajay Madesh",
-    "Anirjit Chandra","Anwesha Pai","Arshiya Karmakar","Ayanna Samal","Chirantani Ash",
+    "Akshay Sathish","Anirjit Chandra","Anwesha Pai","Arshiya Karmakar","Ayanna Samal","Chirantani Ash",
     "Gauransh Kar","Ishita Sharma","Jason Chacko George","Jishnusri Spoorthy Manjuluri",
     "Keshav Syamkumar","Krishna Dash","Louie Mathew","Mayank Praful Lahorkar",
     "Narendran Jayakumar","Praneeth Venkat","Ritwik Guha","S V Niharikha",
@@ -101,6 +101,50 @@ function writeDb(db) {
 // (e.g. to download a backup copy).
 function logStoreInfo() {
   Logger.log('Attendance data file: ' + getAttendanceFile().getUrl());
+}
+
+// Moves one student's full P/A history from one batch to another inside the
+// store (dates that don't yet exist in the destination are added). Run this
+// from the Apps Script editor's function dropdown whenever a student changes
+// batch and you want their history carried over — safe to re-run: once the
+// student is gone from `fromBatch` it just logs "not found" and does nothing.
+function moveStudentBatch(name, fromBatch, toBatch) {
+  const db = readDb();
+  const from = db[fromBatch];
+  const to = db[toBatch] || (db[toBatch] = { dates: [], students: {} });
+
+  if (!from || !from.students[name]) {
+    Logger.log('Not found: ' + name + ' in ' + fromBatch + ' (already moved, or never had a record)');
+    return;
+  }
+
+  from.dates.forEach(function(date, i) {
+    const val = from.students[name][i];
+    if (!val) return;
+
+    let idx = to.dates.indexOf(date);
+    if (idx === -1) {
+      idx = to.dates.length;
+      to.dates.push(date);
+      Object.keys(to.students).forEach(function(n) {
+        while (to.students[n].length <= idx) to.students[n].push('');
+      });
+    }
+    if (!to.students[name]) to.students[name] = to.dates.map(function() { return ''; });
+    while (to.students[name].length <= idx) to.students[name].push('');
+    to.students[name][idx] = val;
+  });
+
+  if (!to.students[name]) to.students[name] = to.dates.map(function() { return ''; });
+
+  delete from.students[name];
+  writeDb(db);
+  Logger.log('Moved ' + name + ' from ' + fromBatch + ' to ' + toBatch);
+}
+
+// One-off: run this once from the editor, then it's safe to leave in place.
+function moveAkshaySathishToMains() {
+  moveStudentBatch('Akshay Sathish', 'XI-Adv B', 'XI-Mains');
 }
 
 function gasJson(obj) {

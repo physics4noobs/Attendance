@@ -65,8 +65,8 @@ backup copy).
 | Batch | STUDENTS key | Students |
 |---|---|---|
 | XI – Advance A | `XI-Adv A` | 34 |
-| XI – Advance B | `XI-Adv B` | 29 |
-| XI – Mains | `XI-Mains` | 25 |
+| XI – Advance B | `XI-Adv B` | 28 |
+| XI – Mains | `XI-Mains` | 26 |
 | XI – NEET | `XI-NEET` | 25 |
 | Grade X | `Grade X` | 6 |
 | Grade IX | `Grade IX` | 18 |
