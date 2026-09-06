@@ -410,7 +410,7 @@
       <div class="tick-badge">✓</div>
       <span class="batch-icon">🧪</span>
       <div class="batch-name">XI – Adv B</div>
-      <div class="batch-count" id="status-XI-Adv B">30 students</div>
+      <div class="batch-count" id="status-XI-Adv B">29 students</div>
     </div>
     <div class="batch-card mains"    id="card-XI-Mains"  onclick="openBatch('XI-Mains')">
       <div class="tick-badge">✓</div>
@@ -468,8 +468,8 @@
 
   const STUDENTS = {
     'XI-Adv A': [
-      "Aarya Sachin Kulkarni","Adhrit Das","Aditya Pandey","Aksh Raturi",
-      "Akshaj Chakrapani","Angira Roy","Anushree Srenivasan","Athul Mathew",
+      "Aarya Sachin Kulkarni","Adhrit Das","Aditya Anand","Aditya Pandey","Aksh Raturi",
+      "Akshaj Chakrapani","Anushree Srenivasan","Athul Mathew",
       "Ayaan Anugrah Lall","Dhruv Naga Aditya Tiruveedula","Diya Aju","Gagan M.N",
       "Georgy Oommen George","Ishaan Sibin","Kanav Gupta","Kanisshka B",
       "Krisha Riteshkumar Panchal","Lakshya Kankar","Lipika Panda","Manmay Panda",
@@ -479,7 +479,7 @@
       "Tanushkaa M","Veda Srishti Dinnepu"
     ],
     'XI-Adv B': [
-      "Aadhya Ganesh","Aakriti","Aditya Anand","Adityaram Arunaachalam",
+      "Aadhya Ganesh","Aakriti","Adityaram Arunaachalam",
       "Ahana Ghosh Roy","Akshay Sathish","Angel Mary Asish","Angela Bino",
       "Ankith Nambiar","Ashish Kumar Barik","Avi Mishra","Chetan Devireddy",
       "Dhruv Sai Paapisetty","Jitesh Karthik","Kabir Yadav","Lakshya Malik",
@@ -631,10 +631,10 @@
     document.getElementById('bannerWeekday').textContent   = days[d.getDay()];
   }
 
-  // ── Sync tick marks with Sheet on every load ─────────────────────────────
-  // Asks the Apps Script which batches already have today's column in the Sheet.
+  // ── Sync tick marks with the backend on every load ───────────────────────
+  // Asks the Apps Script which batches have already submitted today.
   // All phones see the same ticks regardless of who submitted.
-  async function syncWithSheet() {
+  async function syncSubmittedState() {
     try {
       const res  = await fetch(`${SCRIPT_URL}?date=${getTodayString()}`, { redirect: 'follow' });
       const json = await res.json();
@@ -650,7 +650,7 @@
 
   initDateBanner();
   refreshDoneUI();  // immediate from localStorage
-  syncWithSheet();  // background sync with Sheet
+  syncSubmittedState();  // background sync with the backend
   flushPendingSubmissions();  // retry anything that failed to send last time
 
   function openBatch(batch) {
