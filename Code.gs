@@ -393,6 +393,10 @@ function doGet(e) {
     return getBatchHistory(params.batch);
   }
 
+  if (params.action === 'student' && params.name && params.batch) {
+    return getStudentAttendance(params.name, params.batch);
+  }
+
   const date = params.date;
 
   if (!date) {
@@ -446,4 +450,36 @@ function getBatchHistory(batch) {
   return ContentService
     .createTextOutput(JSON.stringify({ batch: batch, dates: dates, students: students }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Returns one student's P/A record across all dates for their batch.
+function getStudentAttendance(name, batch) {
+  try {
+    const ss    = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(batch);
+    if (!sheet) return gasJson({ error: 'Sheet not found: ' + batch });
+
+    const lastRow = sheet.getLastRow();
+    const lastCol = sheet.getLastColumn();
+    if (lastRow < DATA_START_ROW || lastCol < 2) {
+      return gasJson({ name: name, batch: batch, dates: [], records: [] });
+    }
+
+    const allDates = sheet.getRange(HEADER_ROW, 2, 1, lastCol - 1).getValues()[0].map(String);
+    const validDates = allDates.filter(function(d) { return d && d.trim(); });
+    const data = sheet.getRange(DATA_START_ROW, 1, lastRow - DATA_START_ROW + 1, lastCol).getValues();
+
+    const nameLow = name.trim().toLowerCase();
+    const row = data.find(function(r) { return r[0] && String(r[0]).trim().toLowerCase() === nameLow; });
+    if (!row) return gasJson({ name: name, batch: batch, dates: validDates, records: validDates.map(function(){ return ''; }) });
+
+    const records = row.slice(1, validDates.length + 1).map(function(v) { return v ? String(v).trim() : ''; });
+    return gasJson({ name: String(row[0]).trim(), batch: batch, dates: validDates, records: records });
+  } catch(err) {
+    return gasJson({ error: err.message });
+  }
+}
+
+function gasJson(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
