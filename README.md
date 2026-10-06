@@ -64,8 +64,8 @@ backup copy).
 
 | Batch | STUDENTS key | Students |
 |---|---|---|
-| XI – Advance A | `XI-Adv A` | 34 |
-| XI – Advance B | `XI-Adv B` | 28 |
+| XI – Advance A | `XI-Adv A` | 35 |
+| XI – Advance B | `XI-Adv B` | 27 |
 | XI – Mains | `XI-Mains` | 26 |
 | XI – NEET | `XI-NEET` | 25 |
 | Grade X | `Grade X` | 6 |
@@ -147,7 +147,7 @@ want that history renamed over.
 After editing `index.html`, run these commands in Terminal:
 
 ```bash
-cd "/Users/sankaracharyadutta/Desktop/Teaching/DPS PROGRAM/Attendance/attendance-system"
+cd "/Users/sankaracharyadutta/Desktop/Teaching/DPS PROGRAM/Students & Attendance/attendance-system"
 git add index.html
 git commit -m "describe what you changed"
 git push

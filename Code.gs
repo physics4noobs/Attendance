@@ -6,26 +6,25 @@
 
 const STUDENTS = {
   'XI-Adv A': [
-    "Aarya Sachin Kulkarni","Adhrit Das","Aditya Anand","Aditya Pandey","Aksh Raturi",
-    "Akshaj Chakrapani","Anushree Srenivasan","Athul Mathew",
-    "Ayaan Anugrah Lall","Dhruv Naga Aditya Tiruveedula","Diya Aju","Gagan M.N",
-    "Georgy Oommen George","Ishaan Sibin","Kanav Gupta","Kanisshka B",
-    "Krisha Riteshkumar Panchal","Lakshya Kankar","Lipika Panda","Manmay Panda",
-    "Neelakantan Kaplingat","Preya Mankad","Priyasha Rath","Rajveer Saxena",
-    "Rishabh Mallya H","Ronak Rasindh","Saksham Ranjan","Samvit Gupta",
-    "Saniddhya Das","Shrey Dusad","Sreehari Ravi Prasad","T.R.Easwar",
-    "Tanushkaa M","Veda Srishti Dinnepu"
-  ],
+      "Aarya Sachin Kulkarni","Adhrit Das","Aditya Anand","Aditya Pandey",
+      "Akshaj Chakrapani","Anushree Srenivasan","Ashish Kumar Barik","Athul Mathew",
+      "Ayaan Anugrah Lall","Dhruv Naga Aditya Tiruveedula","Dhruv Sai Paapisetty","Diya Aju",
+      "Gagan M.N","Georgy Oommen George","Ishaan Sibin","Jitesh Karthik",
+      "Kanisshka B","Krisha Riteshkumar Panchal","Lakshya Kankar","Lipika Panda",
+      "Manmay Panda","Neel Joshi","Parameswaran Kaplingat","Preya Mankad",
+      "Priyasha Rath","Rajveer Saxena","Rishabh Mallya H","Ronak Rasindh",
+      "Samvit Gupta","Saniddhya Das","Shrey Dusad","Sreehari Ravi Prasad",
+      "T.R.Easwar","Tanushkaa M","Veda Srishti Dinnepu"
+    ],
   'XI-Adv B': [
-    "Aadhya Ganesh","Aakriti","Adityaram Arunaachalam",
-    "Ahana Ghosh Roy","Angel Mary Asish","Angela Bino",
-    "Ankith Nambiar","Ashish Kumar Barik","Avi Mishra","Chetan Devireddy",
-    "Dhruv Sai Paapisetty","Jitesh Karthik","Kabir Yadav","Lakshya Malik",
-    "Lalitha Samanvita Matte","Mohammad Aahil Khan","Naissha Saini","Neel Joshi",
-    "Parameswaran Kaplingat","Piraisoodan","Rakshitha","Rishita Baruah",
-    "Rishitha Reddy Duddukunta","Rithika Reddy Enaganti","Sharada Koona Srinivasan",
-    "Shashwat Chandra","Shourya Ghosh","Shubh Choudhary"
-  ],
+      "Aadhya Ganesh","Aakriti","Adityaram Arunaachalam","Ahana Ghosh Roy",
+      "Aksh Raturi","Angel Mary Asish","Angela Bino","Ankith Nambiar",
+      "Avi Mishra","Chetan Devireddy","Kabir Yadav","Kanav Gupta",
+      "Lakshya Malik","Lalitha Samanvita Matte","Mohammad Aahil Khan","Naissha Saini",
+      "Neelakantan Kaplingat","Piraisoodan","Rakshitha","Rishita Baruah",
+      "Rishitha Reddy Duddukunta","Rithika Reddy Enaganti","Saksham Ranjan","Sharada Koona Srinivasan",
+      "Shashwat Chandra","Shourya Ghosh","Shubh Choudhary"
+    ],
   'XI-Mains': [
     "Aarav Dasgupta","Advitha Rohit","Ahan Agarwal","Ajay Madesh",
     "Akshay Sathish","Anirjit Chandra","Anwesha Pai","Arshiya Karmakar","Ayanna Samal","Chirantani Ash",
@@ -150,6 +149,23 @@ function moveStudentBatch(name, fromBatch, toBatch) {
 // One-off: run this once from the editor, then it's safe to leave in place.
 function moveAkshaySathishToMains() {
   return moveStudentBatch('Akshay Sathish', 'XI-Adv B', 'XI-Mains');
+}
+
+// One-off (Oct 2026 re-split): run ONCE from the Apps Script editor to carry
+// attendance history across for the 9 students who changed section on 6 Oct 2026.
+function moveOct2026Resplit() {
+  const out = [];
+  out.push(moveStudentBatch('Dhruv Sai Paapisetty', 'XI-Adv B', 'XI-Adv A'));
+  out.push(moveStudentBatch('Jitesh Karthik', 'XI-Adv B', 'XI-Adv A'));
+  out.push(moveStudentBatch('Neel Joshi', 'XI-Adv B', 'XI-Adv A'));
+  out.push(moveStudentBatch('Ashish Kumar Barik', 'XI-Adv B', 'XI-Adv A'));
+  out.push(moveStudentBatch('Parameswaran Kaplingat', 'XI-Adv B', 'XI-Adv A'));
+  out.push(moveStudentBatch('Aksh Raturi', 'XI-Adv A', 'XI-Adv B'));
+  out.push(moveStudentBatch('Kanav Gupta', 'XI-Adv A', 'XI-Adv B'));
+  out.push(moveStudentBatch('Neelakantan Kaplingat', 'XI-Adv A', 'XI-Adv B'));
+  out.push(moveStudentBatch('Saksham Ranjan', 'XI-Adv A', 'XI-Adv B'));
+  Logger.log(out.join('\n'));
+  return out.join('\n');
 }
 
 function gasJson(obj) {
